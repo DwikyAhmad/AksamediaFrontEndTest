@@ -15,7 +15,7 @@ export default function Home() {
                     ExpenseTracker.
                 </p>
                 <Link
-                    href={"/login"}
+                    href={"/manage"}
                     className="py-3 px-6 bg-blue-600 rounded-3xl font-medium mt-6
                     hover:bg-blue-800 duration-200 "
                 >

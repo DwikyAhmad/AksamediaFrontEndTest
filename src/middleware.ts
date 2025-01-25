@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
         console.log(`POST request to ${pathname} from ${request.headers.get('referer')}`);
     }
 
-    if (pathname === '/manage' && cookieStore.get('isAuthenticated')?.value !== 'true') {
+    if (pathname.startsWith('/manage') && cookieStore.get('isAuthenticated')?.value !== 'true') {
         return NextResponse.redirect(new URL('/login', baseUrl));
     }
 
