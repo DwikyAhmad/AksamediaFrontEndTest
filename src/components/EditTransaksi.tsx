@@ -61,7 +61,7 @@ export default function EditTransaksi() {
     };
 
     return (
-        <div className="flex justify-center items-center font-poppins">
+        <div className="flex justify-center items-center font-poppins px-2">
             <div className="mt-12 p-4 rounded-lg border w-[500px]">
                 <h2 className="text-2xl font-semibold text-center">
                     Edit Transaction
@@ -86,7 +86,7 @@ export default function EditTransaksi() {
                         </p>
                     </div>
                     <fieldset className="flex flex-col gap-2">
-                        <label htmlFor="category">Category</label>
+                        <p>Category</p>
                         <div className="flex items-center gap-2">
                             <input
                                 type="radio"
