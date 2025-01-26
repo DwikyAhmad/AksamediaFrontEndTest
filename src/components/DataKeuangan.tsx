@@ -14,6 +14,8 @@ export default function DataKeuangan() {
     const router = useRouter();
     const [saldo, setSaldo] = useState<number>(0);
     const [listTransaction, setListTransaction] = useState<Transaction[]>([]);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const itemsPerPage = 5;
 
     useEffect(() => {
         const transactions = localStorage.getItem("transactions");
@@ -43,6 +45,12 @@ export default function DataKeuangan() {
         router.refresh();
     };
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = listTransaction.slice(indexOfFirstItem, indexOfLastItem);
+
+    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
     return (
         <div className="font-poppins flex items-center justify-center flex-col gap-6">
             <h1 className="mt-12 text-xl md:text-3xl font-semibold">
@@ -69,7 +77,7 @@ export default function DataKeuangan() {
                         </tr>
                     </thead>
                     <tbody>
-                        {listTransaction.map((transaction, index) => (
+                        {currentItems.map((transaction, index) => (
                             <tr key={index}>
                                 <td className="border px-3 py-2">{index + 1}</td>
                                 <td className="border px-3 py-2">
@@ -87,15 +95,16 @@ export default function DataKeuangan() {
                                 <td className="border px-3 py-2">
                                     {transaction.description}
                                 </td>
-                                <td className="border px-3 py-2 flex gap-2">
+                                <td className="border px-3 py-2 flex gap-2 flex-wrap">
                                     <Link
                                         href={`/manage/${index}`}
-                                        className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150"
+                                        className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150 
+                                        text-center w-[75px]"
                                     >
                                         Edit
                                     </Link>
                                     <button
-                                        className="bg-red-500 px-3 rounded-md hover:bg-red-700 duration-150"
+                                        className="bg-red-500 px-3 rounded-md hover:bg-red-700 duration-150 w-[75px]"
                                         onClick={() => onDelete(index)}
                                     >
                                         Delete
@@ -105,6 +114,17 @@ export default function DataKeuangan() {
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex justify-center mt-4">
+                {Array.from({ length: Math.ceil(listTransaction.length / itemsPerPage) }, (_, i) => (
+                    <button
+                        key={i}
+                        onClick={() => paginate(i + 1)}
+                        className={`mx-1 px-3 py-1 rounded-md ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'bg-gray-700'}`}
+                    >
+                        {i + 1}
+                    </button>
+                ))}
             </div>
         </div>
     );
