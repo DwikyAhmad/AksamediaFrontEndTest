@@ -6,10 +6,10 @@ export default function Home() {
         <div>
             <Navbar />
             <div className="font-poppins flex justify-center items-center h-[calc(100vh-72px)] flex-col gap-2">
-                <h1 className="font-bold text-3xl">
-                    Raih Goal Finansialmu dengan ExpenseTracker
+                <h1 className="font-bold text-xl md:text-2xl lg:text-3xl text-center px-2">
+                    Raih Goal Finansialmu dengan <span className="text-cyan-400">ExpenseTracker</span>
                 </h1>
-                <p className="font-medium">
+                <p className="sm:font-medium lg:w-[700px] text-center px-6 text-xs font-light md:text-sm lg:text-md">
                     Mengelola pengeluaran, menetapkan anggaran, dan mencapai
                     tujuan finansialmu menjadi lebih mudah dengan
                     ExpenseTracker.

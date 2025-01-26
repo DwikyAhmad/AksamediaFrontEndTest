@@ -31,7 +31,7 @@ export default function EditTransaksi() {
             setCategory(transaction.category);
             setDescription(transaction.description);
         }
-    }, []);
+    }, [params.id]);
 
     const handleCategoryChange = (
         event: React.ChangeEvent<HTMLInputElement>

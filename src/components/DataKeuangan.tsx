@@ -12,19 +12,21 @@ interface Transaction {
 export default function DataKeuangan() {
     const router = useRouter();
 
-    let saldo = localStorage.getItem("saldo");
+    let saldo = 0;
     const transactions = localStorage.getItem("transactions");
     let listTransaction: Transaction[];
-
-    if (saldo === null) {
-        localStorage.setItem("saldo", "0");
-        saldo = "0";
-    }
 
     if (transactions === null) {
         listTransaction = [];
     } else {
         listTransaction = JSON.parse(transactions);
+        for (const transaction of listTransaction) {
+            if (transaction.category === "Income") {
+                saldo += transaction.amount;
+            } else {
+                saldo -= transaction.amount;
+            }
+        }
     }
 
     const onDelete = (index: number) => { 
