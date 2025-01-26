@@ -1,8 +1,43 @@
 "use client";
 
+import { useState } from "react";
+
+interface Transaction {
+    amount: number;
+    category: string;
+    description: string;
+}
+
 export default function FormTransaksi() {
+    const [amount, setAmount] = useState(0);
+    const [category, setCategory] = useState("expense");
+    const [description, setDescription] = useState("");
+
+    const handleCategoryChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setCategory(event.target.value);
+    };
+
     const onSubmit = () => {
-        //...
+        const transaction = localStorage.getItem("transactions");
+
+        if (transaction === null) {
+            const transactions: Transaction[] = [];
+            localStorage.setItem("transactions", JSON.stringify(transactions));
+        } else { 
+            const transactions: Transaction[] = JSON.parse(transaction);
+            const newTransaction = {
+                amount,
+                category,
+                description,
+            };
+
+            transactions.unshift(newTransaction);
+            localStorage.setItem("transactions", JSON.stringify(transactions));
+
+            window.alert("Transaction added successfully");
+        }
     };
 
     return (
@@ -19,6 +54,11 @@ export default function FormTransaksi() {
                             name="amount"
                             id="amount"
                             className="text-black rounded-md px-2 py-2 font-normal text-sm"
+                            placeholder="Nominal Uang"
+                            onChange={(e) =>
+                                setAmount(parseInt(e.target.value))
+                            }
+                            onKeyDown={(e) => (e.key === "Enter" && onSubmit())}
                         />
                         <p className="text-xs font-light">
                             Enter the amount of expenses/income
@@ -32,6 +72,9 @@ export default function FormTransaksi() {
                                 name="category"
                                 id="expense"
                                 value="expense"
+                                onChange={handleCategoryChange}
+                                checked={category === "expense"}
+                                onKeyDown={(e) => (e.key === "Enter" && onSubmit())}
                             />
                             <label htmlFor="expense" className="font-light">
                                 Expense
@@ -43,6 +86,9 @@ export default function FormTransaksi() {
                                 name="category"
                                 id="income"
                                 value="income"
+                                onChange={handleCategoryChange}
+                                checked={category === "income"}
+                                onKeyDown={(e) => (e.key === "Enter" && onSubmit())}
                             />
                             <label htmlFor="income" className="font-light">
                                 Income
@@ -58,6 +104,10 @@ export default function FormTransaksi() {
                             name="description"
                             id="description"
                             className="text-black rounded-md px-2 py-2 font-normal text-sm"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Gajian, Makanan, dll"
+                            onKeyDown={(e) => (e.key === "Enter" && onSubmit())}
                         ></textarea>
                         <p className="text-xs font-light">
                             Enter the description for this transaction

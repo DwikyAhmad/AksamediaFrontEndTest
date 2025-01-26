@@ -1,13 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+interface Transaction {
+    amount: number;
+    category: string;
+    description: string;
+}
 
 export default function DataKeuangan() {
+    const router = useRouter();
+
     let saldo = localStorage.getItem("saldo");
+    const transactions = localStorage.getItem("transactions");
+    let listTransaction: Transaction[];
 
     if (saldo === null) {
         localStorage.setItem("saldo", "0");
         saldo = "0";
+    }
+
+    if (transactions === null) {
+        listTransaction = [];
+    } else {
+        listTransaction = JSON.parse(transactions);
+    }
+
+    const onDelete = (index: number) => { 
+        const newTransactions = listTransaction.filter((_, i) => i !== index);
+        localStorage.setItem("transactions", JSON.stringify(newTransactions));
+        window.alert("Transaction deleted successfully");
+
+        router.refresh();
     }
 
     return (
@@ -33,26 +58,23 @@ export default function DataKeuangan() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className="border px-3 py-2">1</td>
-                        <td className="border px-3 py-2">Expenses</td>
-                        <td className="border px-3 py-2">Rp. 10000</td>
-                        <td className="border px-3 py-2">Makanan</td>
-                        <td className="border px-3 py-2 flex gap-2">
-                            <button className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150">Edit</button>
-                            <button className="bg-red-500 px-3 rounded-md hover:bg-red-700 duration-150">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border px-3 py-2">2</td>
-                        <td className="border px-3 py-2">Income</td>
-                        <td className="border px-3 py-2">Rp. 5000</td>
-                        <td className="border px-3 py-2">Gaji</td>
-                        <td className="border px-3 py-2 flex gap-2">
-                            <button className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150">Edit</button>
-                            <button className="bg-red-500 px-3 rounded-md hover:bg-red-700 duration-150">Delete</button>
-                        </td>
-                    </tr>
+                    {listTransaction.map((transaction, index) => (
+                        <tr key={index}>
+                            <td className="border px-3 py-2">{index + 1}</td>
+                            <td className="border px-3 py-2">{transaction.category}</td>
+                            <td className="border px-3 py-2">Rp. {transaction.amount}</td>
+                            <td className="border px-3 py-2">{transaction.description}</td>
+                            <td className="border px-3 py-2 flex gap-2">
+                                <button className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150">
+                                    Edit
+                                </button>
+                                <button className="bg-red-500 px-3 rounded-md hover:bg-red-700 duration-150"
+                                onClick={() => onDelete(index)}>
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
