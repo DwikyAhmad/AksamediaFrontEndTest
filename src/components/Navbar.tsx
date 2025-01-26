@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import isAuthenticated from "./isAuthenticated";
+import { logout } from "./logout";
 
 interface User {
     name: string;
@@ -63,6 +64,10 @@ export default function Navbar() {
             document.removeEventListener("mousedown", handleClickOutsideMenu);
         };
     }, []);
+
+    const handleLogout = () => { 
+        logout();
+    }
 
     return (
         <nav className="flex justify-between items-center px-8 py-4 min-h-[72px] bg-blue-400 font-semibold font-poppins">
@@ -145,7 +150,8 @@ export default function Navbar() {
                                 <li className="px-4 py-1 hover:bg-slate-300 duration-150">
                                     Edit Profile
                                 </li>
-                                <li className="px-4 py-1 hover:bg-slate-300 duration-150">
+                                <li className="px-4 py-1 hover:bg-slate-300 duration-150"
+                                onClick={handleLogout}>
                                     Logout
                                 </li>
                             </ul>
@@ -153,7 +159,7 @@ export default function Navbar() {
                     </li>
                 ) : (
                     <li>
-                        <Link href={"/login"} className="py-1 px-3">
+                        <Link href={"/login"} className="py-1">
                             Login
                         </Link>
                     </li>
