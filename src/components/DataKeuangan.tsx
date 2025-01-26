@@ -48,7 +48,7 @@ export default function DataKeuangan() {
         localStorage.setItem("transactions", JSON.stringify(newTransactions));
         window.alert("Transaction deleted successfully");
 
-        router.refresh();
+        window.location.reload();
     };
 
     const filteredTransactions = (list: Transaction[]) => {
