@@ -197,7 +197,7 @@ export default function Navbar() {
                                 bg-white rounded-lg shadow-lg py-3 font-medium space-y-1"
                                 >
                                     <li className="px-4 py-1 hover:bg-slate-300 duration-150">
-                                        Edit Profile
+                                        <Link href={'/editProfile'}>Edit Profile</Link>
                                     </li>
                                     <li
                                         className="px-4 py-1 hover:bg-slate-300 duration-150"
