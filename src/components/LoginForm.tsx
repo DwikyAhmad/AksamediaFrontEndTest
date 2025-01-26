@@ -30,7 +30,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="font-poppins flex justify-center items-center h-[calc(100vh-72px)]">
+        <div className="font-poppins flex justify-center items-center h-[calc(100vh-72px)] px-2">
             <div className="flex flex-col gap-3 px-6 py-4 bg-blue-500 rounded-2xl font-medium w-[500px] justify-center">
                 <div className="mb-3">
                     <h2 className="font-semibold text-center text-xl">

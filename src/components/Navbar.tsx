@@ -18,6 +18,7 @@ export default function Navbar() {
     const [openMobile, setOpenMobile] = useState(false);
     const dropdownRef = useRef<HTMLLIElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
+    const [theme, setTheme] = useState("");
 
     useEffect(() => {
         isAuthenticated().then((res) => {
@@ -65,18 +66,52 @@ export default function Navbar() {
         };
     }, []);
 
-    const handleLogout = () => { 
+    const handleLogout = () => {
         logout();
+    };
+
+    useEffect(() => {
+        document.documentElement.classList.toggle(
+            "dark",
+            localStorage.currentTheme === "dark" ||
+              (!("theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches),
+        );
+        
+        if (localStorage.currentTheme === "dark") {
+            document.documentElement.classList.add("dark");
+            setTheme("Dark");
+        } else if (localStorage.currentTheme === "light") {
+            document.documentElement.classList.remove("dark");
+            setTheme("Light");
+        } else {
+            setTheme("System");
+        }
+    }, [setTheme]);
+    
+    const changeTheme = (theme: string) => { 
+        if (theme === "Dark") {
+            localStorage.currentTheme = "dark";
+            document.documentElement.classList.add("dark");
+        } else if (theme === "Light") {
+            localStorage.currentTheme = "light";
+            document.documentElement.classList.remove("dark");
+        } else {
+            localStorage.removeItem("currentTheme");
+            document.documentElement.classList.toggle(
+                "dark",
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+            );
+        }
+        setTheme(theme);
     }
 
     return (
-        <nav className="flex justify-between items-center px-8 py-4 min-h-[72px] bg-blue-400 font-semibold font-poppins">
+        <nav className="flex justify-between items-center px-3 sm:px-8 py-4 min-h-[72px] bg-blue-400 font-semibold font-poppins">
             <Link href={"/"} className="hidden md:flex">
                 <h1>ExpenseTracker</h1>
             </Link>
-            <ul className="flex gap-8 items-center justify-between max-md:w-full">
-                <div className="hidden md:flex gap-8">
-                    <li>Dark Mode</li>
+            <ul className="flex gap-6 items-center justify-between max-md:w-full">
+                <div className="hidden md:flex gap-6 items-center">
                     <li>
                         <Link
                             href={"/manage"}
@@ -86,6 +121,7 @@ export default function Navbar() {
                         </Link>
                     </li>
                 </div>
+
                 <div
                     className="flex md:hidden p-1 hover:bg-blue-500 duration-150 rounded-full relative"
                     onClick={() => setOpenMobile((prev) => !prev)}
@@ -112,58 +148,74 @@ export default function Navbar() {
                             bg-white rounded-lg shadow-lg py-3 font-medium space-y-1"
                         >
                             <li className="px-4 py-1 hover:bg-slate-300 duration-150">
-                                <Link href={'/'}>Home</Link>
+                                <Link href={"/"}>Home</Link>
                             </li>
                             <li className="px-4 py-1 hover:bg-slate-300 duration-150">
-                                <Link href={'/manage'}>Manage</Link>
+                                <Link href={"/manage"}>Manage</Link>
                             </li>
                         </ul>
                     )}
                 </div>
 
-                {isAuth ? (
-                    <li
-                        className="flex gap-2 py-1 px-3 rounded-3xl items-center outline
-                    hover:cursor-pointer hover:bg-blue-500 duration-150 relative"
-                        onClick={() => setOpen((prev) => !prev)}
-                        ref={dropdownRef}
+                <div className="flex gap-6 items-center">
+                    <select
+                        name="mode"
+                        id="themes"
+                        className="bg-blue-400 outline rounded-3xl py-[2px] w-[100px] px-2 hover:brightness-90 duration-150
+                            focus:outline-white"
+                        onChange={(e) => changeTheme((e.target as HTMLSelectElement).value)}
+                        value={theme}
                     >
-                        {user && user.name}
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            width="1em"
-                            height="1em"
-                            className="text-lg"
-                        >
-                            <path
-                                fill="currentColor"
-                                d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"
-                            />
-                        </svg>
+                        <option value="Dark">Dark</option>
+                        <option value="Light">Light</option>
+                        <option value="System">System</option>
+                    </select>
 
-                        {open && (
-                            <ul
-                                className="absolute top-full right-0 min-w-max mt-2 text-black 
-                            bg-white rounded-lg shadow-lg py-3 font-medium space-y-1"
+                    {isAuth ? (
+                        <li
+                            className="flex gap-2 py-1 px-3 rounded-3xl items-center outline
+                        hover:cursor-pointer hover:bg-blue-500 duration-150 relative"
+                            onClick={() => setOpen((prev) => !prev)}
+                            ref={dropdownRef}
+                        >
+                            {user && user.name}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                width="1em"
+                                height="1em"
+                                className="text-lg"
                             >
-                                <li className="px-4 py-1 hover:bg-slate-300 duration-150">
-                                    Edit Profile
-                                </li>
-                                <li className="px-4 py-1 hover:bg-slate-300 duration-150"
-                                onClick={handleLogout}>
-                                    Logout
-                                </li>
-                            </ul>
-                        )}
-                    </li>
-                ) : (
-                    <li>
-                        <Link href={"/login"} className="py-1">
-                            Login
-                        </Link>
-                    </li>
-                )}
+                                <path
+                                    fill="currentColor"
+                                    d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6l-6-6z"
+                                />
+                            </svg>
+                            {open && (
+                                <ul
+                                    className="absolute top-full right-0 min-w-max mt-2 text-black
+                                bg-white rounded-lg shadow-lg py-3 font-medium space-y-1"
+                                >
+                                    <li className="px-4 py-1 hover:bg-slate-300 duration-150">
+                                        Edit Profile
+                                    </li>
+                                    <li
+                                        className="px-4 py-1 hover:bg-slate-300 duration-150"
+                                        onClick={handleLogout}
+                                    >
+                                        Logout
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
+                    ) : (
+                        <li>
+                            <Link href={"/login"} className="py-1">
+                                Login
+                            </Link>
+                        </li>
+                    )}
+                </div>
             </ul>
         </nav>
     );
