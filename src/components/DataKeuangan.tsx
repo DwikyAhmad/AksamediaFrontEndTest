@@ -65,9 +65,9 @@ export default function DataKeuangan() {
                             <td className="border px-3 py-2">Rp. {transaction.amount}</td>
                             <td className="border px-3 py-2">{transaction.description}</td>
                             <td className="border px-3 py-2 flex gap-2">
-                                <button className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150">
+                                <Link href={`/manage/${index}`} className="bg-orange-500 px-3 rounded-md hover:bg-orange-700 duration-150">
                                     Edit
-                                </button>
+                                </Link>
                                 <button className="bg-red-500 px-3 rounded-md hover:bg-red-700 duration-150"
                                 onClick={() => onDelete(index)}>
                                     Delete
